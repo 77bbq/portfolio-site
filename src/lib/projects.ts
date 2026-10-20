@@ -75,7 +75,9 @@ function isEncodedPublicMediaPath(value: string): boolean {
   }
 }
 
-export function createProjectSchema(imageFactory: () => z.ZodTypeAny) {
+export function createProjectSchema<TImageSchema extends z.ZodType>(
+  imageFactory: () => TImageSchema,
+) {
   const nonEmptyText = z.string().trim().min(1);
   const imageMedia = z.object({
     type: z.literal("image"),

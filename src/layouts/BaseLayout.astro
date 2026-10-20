@@ -1,0 +1,40 @@
+---
+import Footer from "../components/Footer.astro";
+import Header from "../components/Header.astro";
+import { siteIdentity } from "../data/site";
+import { withBasePath } from "../lib/paths";
+import "../styles/global.css";
+
+interface Props {
+  title?: string;
+  description?: string;
+}
+
+const {
+  title = siteIdentity.title,
+  description = "聚焦机器人、嵌入式与系统集成的项目作品集",
+} = Astro.props;
+const pageTitle = title === siteIdentity.title ? title : `${title} | ${siteIdentity.title}`;
+---
+
+<!doctype html>
+<html lang="zh-CN">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="description" content={description} />
+    <meta name="theme-color" content="#080d14" />
+    <link rel="icon" type="image/svg+xml" href={withBasePath("/favicon.svg", import.meta.env.BASE_URL)} />
+    <title>{pageTitle}</title>
+  </head>
+  <body>
+    <a class="skip-link" href="#main-content">跳到主内容</a>
+    <div class="site-frame">
+      <Header />
+      <main id="main-content" tabindex="-1">
+        <slot />
+      </main>
+      <Footer />
+    </div>
+  </body>
+</html>

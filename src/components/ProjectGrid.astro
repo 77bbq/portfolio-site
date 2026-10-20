@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import { stageSectionId, type Stage } from "../lib/projects";
+import ProjectCard from "./ProjectCard.astro";
+
+interface Props {
+  title: string;
+  stage: Stage;
+  projects: CollectionEntry<"projects">[];
+}
+
+const { title, stage, projects } = Astro.props;
+---
+
+<section class="project-section" id={stageSectionId(stage)} aria-labelledby={`${stage}-title`}>
+  <header class="section-heading">
+    <div>
+      <p class="eyebrow">{stage === "graduate" ? "GRADUATE" : "UNDERGRADUATE"}</p>
+      <h2 id={`${stage}-title`}>{title}</h2>
+    </div>
+    <p class="project-count" aria-label={`${projects.length}个项目`}>
+      <strong>{String(projects.length).padStart(2, "0")}</strong>
+      <span>PROJECTS</span>
+    </p>
+  </header>
+
+  <div class="project-grid" data-count={projects.length}>
+    {projects.map((project) => <ProjectCard project={project} />)}
+  </div>
+</section>

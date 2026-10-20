@@ -1,0 +1,31 @@
+---
+import { resolveConfiguredHref } from "../lib/paths";
+
+interface Props {
+  href: string;
+  label: string;
+  base?: string;
+}
+
+const { href, label, base = import.meta.env.BASE_URL } = Astro.props;
+const resolved = resolveConfiguredHref(href, base);
+---
+
+{
+  resolved && (
+    <a
+      href={resolved.href}
+      target={resolved.external ? "_blank" : undefined}
+      rel={resolved.external ? "noopener noreferrer" : undefined}
+      data-configured-link
+    >
+      <span>{label}</span>
+      {resolved.external && (
+        <span class="external-mark" aria-hidden="true">
+          ↗
+        </span>
+      )}
+      {resolved.external && <span class="sr-only">（在新窗口打开）</span>}
+    </a>
+  )
+}

@@ -1,17 +1,46 @@
 ---
-const title = "机器人与嵌入式作品集";
+import ProjectGrid from "../components/ProjectGrid.astro";
+import { siteIdentity } from "../data/site";
+import BaseLayout from "../layouts/BaseLayout.astro";
+import { getProjects, groupProjects, STAGE_LABELS } from "../lib/projects";
+
+const projects = await getProjects();
+const groupedProjects = groupProjects(projects);
 ---
 
-<!doctype html>
-<html lang="zh-CN">
-  <head>
-    <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width" />
-    <title>{title}</title>
-  </head>
-  <body>
-    <main>
-      <h1>{title}</h1>
-    </main>
-  </body>
-</html>
+<BaseLayout>
+  <section class="hero" aria-labelledby="portfolio-title">
+    <div class="shell hero-grid">
+      <div class="hero-copy">
+        <p class="eyebrow">ROBOTICS / EMBEDDED SYSTEMS</p>
+        <h1 id="portfolio-title">{siteIdentity.name || siteIdentity.title}</h1>
+        <p class="hero-direction">{siteIdentity.direction}</p>
+        {siteIdentity.intro && <p class="hero-intro">{siteIdentity.intro}</p>}
+      </div>
+
+      <div class="hero-index" aria-label="项目数量">
+        <div>
+          <strong>{String(groupedProjects.graduate.length).padStart(2, "0")}</strong>
+          <span>研究生项目</span>
+        </div>
+        <div>
+          <strong>{String(groupedProjects.undergraduate.length).padStart(2, "0")}</strong>
+          <span>本科生项目</span>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <div class="shell project-sections">
+    <ProjectGrid
+      title={STAGE_LABELS.graduate}
+      stage="graduate"
+      projects={groupedProjects.graduate}
+    />
+    <ProjectGrid
+      title={STAGE_LABELS.undergraduate}
+      stage="undergraduate"
+      projects={groupedProjects.undergraduate}
+    />
+  </div>
+</BaseLayout>

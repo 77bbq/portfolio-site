@@ -1,0 +1,27 @@
+---
+import { siteIdentity } from "../data/site";
+import ConfiguredLink from "./ConfiguredLink.astro";
+
+const emailHref = siteIdentity.email
+  ? siteIdentity.email.toLowerCase().startsWith("mailto:")
+    ? siteIdentity.email
+    : `mailto:${siteIdentity.email}`
+  : "";
+---
+
+<footer class="site-footer">
+  <div class="shell footer-inner">
+    <div>
+      <p class="footer-kicker">PORTFOLIO / ARCHIVE</p>
+      <p class="footer-title">{siteIdentity.title}</p>
+    </div>
+
+    <div class="footer-actions" data-footer-actions>
+      <ConfiguredLink href={siteIdentity.githubUrl} label="GitHub" />
+      <ConfiguredLink href={siteIdentity.resumeUrl} label="个人简历" />
+      <ConfiguredLink href={emailHref} label="联系邮箱" />
+    </div>
+
+    <p class="footer-note">使用 Astro 构建的静态作品集</p>
+  </div>
+</footer>

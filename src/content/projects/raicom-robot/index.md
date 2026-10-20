@@ -8,6 +8,7 @@ contentStatus: "placeholder"
 summary: ""
 cover: "./cover.webp"
 coverAlt: "睿抗机器人实物照片"
+coverFit: "contain"
 roles: []
 tech: []
 metrics: []

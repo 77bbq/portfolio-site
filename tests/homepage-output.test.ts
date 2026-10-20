@@ -80,4 +80,16 @@ describe("built homepage", () => {
     expect($("video, video source")).toHaveLength(0);
     expect(html).not.toContain(".mp4");
   });
+
+  it("keeps tall or mechanically dense project covers fully visible", () => {
+    const $ = load(html);
+
+    for (const slug of ["smart-harvesting-car", "raicom-robot"]) {
+      const href = withBasePath(`/projects/${slug}/`, process.env.BASE_PATH);
+      const media = $(`a[href="${href}"]`).find(".project-card__media");
+
+      expect(media).toHaveLength(1);
+      expect(media.hasClass("project-card__media--contain"), slug).toBe(true);
+    }
+  });
 });

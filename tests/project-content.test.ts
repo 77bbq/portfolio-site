@@ -6,7 +6,7 @@ import { describe, expect, it } from "vitest";
 import {
   loadProjectFixtures,
   repositoryRoot,
-  requiredProjects,
+  requiredProjectSlugs,
   templatePath,
 } from "./project-fixtures";
 
@@ -36,9 +36,9 @@ describe("project content manifest", () => {
   it("keeps the seven confirmed projects stable while allowing additions and authoring", async () => {
     const fixtures = await loadProjectFixtures();
 
-    expect(fixtures.size).toBeGreaterThanOrEqual(Object.keys(requiredProjects).length);
-    for (const [slug, expected] of Object.entries(requiredProjects)) {
-      expect(fixtures.get(slug)?.data, slug).toMatchObject(expected);
+    expect(fixtures.size).toBeGreaterThanOrEqual(requiredProjectSlugs.length);
+    for (const slug of requiredProjectSlugs) {
+      expect(fixtures.has(slug), slug).toBe(true);
     }
 
     for (const fixture of fixtures.values()) {

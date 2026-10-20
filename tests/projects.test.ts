@@ -201,6 +201,19 @@ describe("media ordering", () => {
     expect(sortMedia(input)).toEqual([video, image]);
     expect(input).toEqual([image, video]);
   });
+
+  it("uses code-point order for mixed-case sources with equal order", () => {
+    const uppercase = {
+      ...video,
+      src: "/media/projects/Z.mp4",
+    } as ProjectVideoMedia;
+    const lowercase = {
+      ...video,
+      src: "/media/projects/a.mp4",
+    } as ProjectVideoMedia;
+
+    expect(sortMedia([lowercase, uppercase])).toEqual([uppercase, lowercase]);
+  });
 });
 
 describe("stable navigation and visibility helpers", () => {

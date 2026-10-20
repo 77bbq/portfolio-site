@@ -51,7 +51,7 @@ pnpm verify
 
 填写时：
 
-1. 补充 `summary`、`roles`、`tech`、`metrics` 和正文。
+1. 按需修改 `title`，并补充 `summary`、`roles`、`tech`、`metrics` 和正文。
 2. 先写入真正可见的 Markdown 正文，再将 `contentStatus` 从 `placeholder` 改为 `ready`；模板中的 HTML 注释不会成为可见内容。
 3. 用 `stage: graduate` 或 `stage: undergraduate` 选择分组。
 4. 用 `order` 控制同组排序；数值相同时按 `slug` 排序。

@@ -6,7 +6,12 @@ import { beforeAll, describe, expect, it } from "vitest";
 
 import { siteIdentity } from "../src/data/site";
 import { withBasePath } from "../src/lib/paths";
-import { stageSectionId } from "../src/lib/projects";
+import {
+  compareProjects,
+  stageSectionId,
+  STAGE_LABELS,
+  STATUS_LABELS,
+} from "../src/lib/projects";
 import {
   loadProjectFixtures,
   type ProjectFixture,
@@ -37,8 +42,10 @@ async function builtStylesheet(): Promise<string> {
 describe("built homepage", () => {
   it("introduces the portfolio and groups graduate projects first", () => {
     const $ = load(html);
-    expect($("body").text()).toContain("机器人与嵌入式作品集");
-    expect($("body").text()).toContain("机器人 · 嵌入式 · 系统集成");
+    expect($("#portfolio-title").text().trim()).toBe(
+      (siteIdentity.name || siteIdentity.title).trim(),
+    );
+    expect($(".hero-direction").text().trim()).toBe(siteIdentity.direction.trim());
 
     const graduateIndex = html.indexOf('id="graduate-projects"');
     const undergraduateIndex = html.indexOf('id="undergraduate-projects"');
@@ -58,7 +65,14 @@ describe("built homepage", () => {
 
       expect(links, data.slug).toHaveLength(1);
       expect(links.closest(section), data.slug).toHaveLength(1);
-      expect(links.closest("[data-project-card]").text()).toContain(data.title);
+      const card = links.closest("[data-project-card]");
+      const cardText = card.text();
+      expect(cardText).toContain(data.title);
+      expect(cardText).toContain(STAGE_LABELS[data.stage]);
+      expect(cardText).toContain(STATUS_LABELS[data.status]);
+      expect(card.find(".project-card__index").text().trim()).toBe(
+        String(data.order).padStart(2, "0"),
+      );
       stageCounts[data.stage] += 1;
     }
 
@@ -69,13 +83,20 @@ describe("built homepage", () => {
       String(stageCounts.undergraduate).padStart(2, "0"),
     );
 
-    const airGroundHref = withBasePath(
-      "/projects/air-ground-coordination/",
-      process.env.BASE_PATH,
-    );
-    expect($(`a[href="${airGroundHref}"]`).closest("[data-project-card]").text()).toContain(
-      "进行中",
-    );
+    for (const stage of ["graduate", "undergraduate"] as const) {
+      const section = `#${stageSectionId(stage)}`;
+      const actualHrefs = $(`${section} [data-project-card] > a`)
+        .toArray()
+        .map((anchor) => $(anchor).attr("href"));
+      const expectedHrefs = [...projects.values()]
+        .filter(({ data }) => data.stage === stage)
+        .sort(compareProjects)
+        .map(({ data }) =>
+          withBasePath(`/projects/${data.slug}/`, process.env.BASE_PATH),
+        );
+
+      expect(actualHrefs, `${stage} project order`).toEqual(expectedHrefs);
+    }
   });
 
   it("renders only the summaries, technologies, and footer actions currently configured", () => {

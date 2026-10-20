@@ -51,57 +51,45 @@ export const templatePath = path.join(
   "index.md",
 );
 
-export const requiredProjects = {
-  "air-ground-coordination": {
-    title: "空地协同",
-    stage: "graduate",
-    status: "ongoing",
-    order: 10,
-  },
-  "robomaster-hero": {
-    title: "机甲大师英雄",
-    stage: "undergraduate",
-    status: "completed",
-    order: 10,
-  },
-  "electric-racing-car": {
-    title: "电赛车",
-    stage: "undergraduate",
-    status: "completed",
-    order: 20,
-  },
-  "logistics-carrier": {
-    title: "物流搬运机小车",
-    stage: "undergraduate",
-    status: "completed",
-    order: 30,
-  },
-  "smart-harvesting-car": {
-    title: "智能采摘车",
-    stage: "undergraduate",
-    status: "completed",
-    order: 40,
-  },
-  "raicom-robot": {
-    title: "睿抗机器人",
-    stage: "undergraduate",
-    status: "completed",
-    order: 50,
-  },
-  "bionic-frog": {
-    title: "仿生青蛙",
-    stage: "undergraduate",
-    status: "completed",
-    order: 60,
-  },
-} as const;
+export const requiredProjectSlugs = [
+  "air-ground-coordination",
+  "robomaster-hero",
+  "electric-racing-car",
+  "logistics-carrier",
+  "smart-harvesting-car",
+  "raicom-robot",
+  "bionic-frog",
+] as const;
 
 function strings(value: unknown): string[] {
-  return Array.isArray(value) ? value.map(String) : [];
+  return Array.isArray(value) ? value.map((item) => trimmedText(item)) : [];
 }
 
 function text(value: unknown): string {
   return typeof value === "string" ? value : "";
+}
+
+function trimmedText(value: unknown): string {
+  return text(value).trim();
+}
+
+function optionalTrimmedText(value: unknown): string | undefined {
+  return typeof value === "string" ? value.trim() : undefined;
+}
+
+export function compareProjectMediaFixtures(
+  left: ProjectMediaFixture,
+  right: ProjectMediaFixture,
+): number {
+  if (left.order !== right.order) {
+    return left.order - right.order;
+  }
+
+  if (left.src === right.src) {
+    return 0;
+  }
+
+  return left.src < right.src ? -1 : 1;
 }
 
 export async function loadProjectFixtures(): Promise<Map<string, ProjectFixture>> {
@@ -119,7 +107,7 @@ export async function loadProjectFixtures(): Promise<Map<string, ProjectFixture>
     const source = await readFile(file, "utf8");
     const parsed = matter(source);
     const raw = parsed.data as Record<string, unknown>;
-    const slug = text(raw.slug);
+    const slug = trimmedText(raw.slug);
     const rawLinks = (raw.links ?? {}) as Record<string, unknown>;
     const rawMedia = Array.isArray(raw.media) ? raw.media : [];
 
@@ -132,15 +120,15 @@ export async function loadProjectFixtures(): Promise<Map<string, ProjectFixture>
       source,
       body: parsed.content,
       data: {
-        title: text(raw.title),
+        title: trimmedText(raw.title),
         slug,
         stage: raw.stage as ProjectStage,
         status: raw.status as ProjectStatus,
         order: Number(raw.order),
         contentStatus: raw.contentStatus as ProjectContentStatus,
-        summary: text(raw.summary),
+        summary: trimmedText(raw.summary),
         cover: text(raw.cover),
-        coverAlt: text(raw.coverAlt),
+        coverAlt: trimmedText(raw.coverAlt),
         roles: strings(raw.roles),
         tech: strings(raw.tech),
         metrics: strings(raw.metrics),
@@ -148,17 +136,20 @@ export async function loadProjectFixtures(): Promise<Map<string, ProjectFixture>
           const media = item as Record<string, unknown>;
           return {
             type: media.type as "image" | "video",
-            src: text(media.src),
+            src:
+              media.type === "video"
+                ? trimmedText(media.src)
+                : text(media.src),
             poster: text(media.poster) || undefined,
-            alt: text(media.alt),
-            caption: text(media.caption) || undefined,
+            alt: trimmedText(media.alt),
+            caption: optionalTrimmedText(media.caption),
             order: Number(media.order),
           };
         }),
         links: {
-          repository: text(rawLinks.repository),
-          demo: text(rawLinks.demo),
-          document: text(rawLinks.document),
+          repository: trimmedText(rawLinks.repository),
+          demo: trimmedText(rawLinks.demo),
+          document: trimmedText(rawLinks.document),
         },
       },
     });

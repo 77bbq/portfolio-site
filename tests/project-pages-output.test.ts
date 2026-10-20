@@ -12,6 +12,7 @@ import {
   STATUS_LABELS,
 } from "../src/lib/projects";
 import {
+  compareProjectMediaFixtures,
   loadProjectFixtures,
   type ProjectFixture,
   type ProjectMediaFixture,
@@ -21,9 +22,7 @@ const pages = new Map<string, string>();
 let projects: Map<string, ProjectFixture>;
 
 function sortedMedia(media: ProjectMediaFixture[]): ProjectMediaFixture[] {
-  return [...media].sort(
-    (left, right) => left.order - right.order || left.src.localeCompare(right.src),
-  );
+  return [...media].sort(compareProjectMediaFixtures);
 }
 
 beforeAll(async () => {
@@ -41,6 +40,26 @@ beforeAll(async () => {
 });
 
 describe("built project detail pages", () => {
+  it("matches production code-point ordering for equal-order mixed-case media", () => {
+    const lower = {
+      type: "video",
+      src: "/media/projects/a.mp4",
+      alt: "小写路径",
+      order: 10,
+    } as const;
+    const upper = {
+      type: "video",
+      src: "/media/projects/Z.mp4",
+      alt: "大写路径",
+      order: 10,
+    } as const;
+
+    expect(sortedMedia([lower, upper]).map((item) => item.src)).toEqual([
+      upper.src,
+      lower.src,
+    ]);
+  });
+
   it("renders current project identity and stage-aware backlinks", () => {
     expect(pages).toHaveLength(projects.size);
 
@@ -132,9 +151,14 @@ describe("built project detail pages", () => {
       const pictures = $("[data-project-media] picture");
 
       expect(pictures, slug).toHaveLength(expectedImages.length);
-      pictures.each((index, picture) => {
-        const image = $(picture).find("img");
-        expect(image.attr("alt")?.trim()).toBe(expectedImages[index]?.alt);
+      expect(
+        pictures
+          .toArray()
+          .map((picture) => $(picture).find("img").attr("alt")?.trim())
+          .sort(),
+        `${slug}: image alt text`,
+      ).toEqual(expectedImages.map((item) => item.alt).sort());
+      pictures.each((_index, picture) => {
         expect(
           $(picture)
             .find("source")

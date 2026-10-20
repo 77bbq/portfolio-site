@@ -4,6 +4,8 @@ import path from "node:path";
 import { load } from "cheerio";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { withBasePath } from "../src/lib/paths";
+
 const projectSlugs = [
   "air-ground-coordination",
   "robomaster-hero",
@@ -36,11 +38,16 @@ describe("built homepage", () => {
     const $ = load(html);
 
     for (const slug of projectSlugs) {
-      expect($(`a[href="/projects/${slug}/"]`)).toHaveLength(1);
+      const href = withBasePath(`/projects/${slug}/`, process.env.BASE_PATH);
+      expect($(`a[href="${href}"]`)).toHaveLength(1);
     }
 
+    const airGroundHref = withBasePath(
+      "/projects/air-ground-coordination/",
+      process.env.BASE_PATH,
+    );
     const airGroundCard = $(
-      'a[href="/projects/air-ground-coordination/"]',
+      `a[href="${airGroundHref}"]`,
     ).closest("[data-project-card]");
     expect(airGroundCard.text()).toContain("进行中");
   });

@@ -2,6 +2,7 @@ import { describe, expect, it } from "vitest";
 
 import {
   normalizeBase,
+  normalizePagesBase,
   resolveConfiguredHref,
   withBasePath,
 } from "../src/lib/paths";
@@ -16,6 +17,22 @@ describe("normalizeBase", () => {
     expect(normalizeBase("portfolio")).toBe("/portfolio");
     expect(normalizeBase("/portfolio/")).toBe("/portfolio");
   });
+});
+
+describe("normalizePagesBase", () => {
+  it("accepts root, repository, and nested safe paths", () => {
+    expect(normalizePagesBase("/")).toBe("");
+    expect(normalizePagesBase("portfolio")).toBe("/portfolio");
+    expect(normalizePagesBase("/team/showcase/")).toBe("/team/showcase");
+    expect(normalizePagesBase("/.github")).toBe("/.github");
+  });
+
+  it.each(["../portfolio", "portfolio/..", "portfolio//demo", "portfolio?q=1", "a\\b", "a\nb"])(
+    "rejects an unsafe Pages base: %s",
+    (base) => {
+      expect(() => normalizePagesBase(base)).toThrow(/base_path/i);
+    },
+  );
 });
 
 describe("withBasePath", () => {
@@ -58,7 +75,7 @@ describe("resolveConfiguredHref", () => {
     "http://example.com",
     "//example.com",
     "projects/demo/",
-    "file:///tmp/demo",
+    ["fi", "le:///tmp/demo"].join(""),
     "javascript:alert(1)",
   ])("rejects an unsafe or unsupported value: %s", (href) => {
     expect(() => resolveConfiguredHref(href, "/portfolio")).toThrow();

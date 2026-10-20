@@ -16,7 +16,12 @@
     "media:poster": "node scripts/prepare-media.mjs poster",
     "media:video": "node scripts/prepare-media.mjs video",
     "test": "vitest --exclude tests/*-output.test.ts --exclude tests/built-site-integrity.test.ts",
-    "test:unit": "vitest run --exclude tests/*-output.test.ts --exclude tests/built-site-integrity.test.ts"
+    "test:unit": "vitest run --exclude tests/*-output.test.ts --exclude tests/built-site-integrity.test.ts",
+    "test:output": "vitest run tests/homepage-output.test.ts tests/project-pages-output.test.ts tests/built-site-integrity.test.ts",
+    "test:run": "pnpm test:unit && pnpm build && pnpm test:output",
+    "site:audit": "node scripts/check-built-site.mjs",
+    "extensibility:check": "node scripts/check-extensibility.mjs",
+    "verify": "pnpm test:unit && pnpm astro check && pnpm extensibility:check && pnpm build && pnpm test:output && pnpm site:audit"
   },
   "dependencies": {
     "astro": "^7.4.1",

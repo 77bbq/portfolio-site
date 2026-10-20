@@ -4,6 +4,8 @@ import path from "node:path";
 import { load } from "cheerio";
 import { beforeAll, describe, expect, it } from "vitest";
 
+import { withBasePath } from "../src/lib/paths";
+
 const expectedProjects = {
   "air-ground-coordination": {
     title: "空地协同",
@@ -84,7 +86,8 @@ describe("built project detail pages", () => {
       expect($("h1").text()).toContain(expected.title);
       expect(bodyText).toContain(expected.stage);
       expect(bodyText).toContain(expected.status);
-      expect($(`a[href="/#${expected.section}"]`).length).toBeGreaterThanOrEqual(1);
+      const backHref = `${withBasePath("/", process.env.BASE_PATH)}#${expected.section}`;
+      expect($(`a[href="${backHref}"]`).length).toBeGreaterThanOrEqual(1);
     }
   });
 
@@ -129,7 +132,11 @@ describe("built project detail pages", () => {
       expect(video.is("[autoplay]")).toBe(false);
       expect(video.attr("poster")?.trim()).toBeTruthy();
       expect(video.attr("aria-label")?.trim()).toBeTruthy();
-      expect(video.attr("src")).toMatch(/^\/media\/projects\/.+\.mp4$/);
+      const source = video.attr("src") ?? "";
+      expect(source.startsWith(withBasePath("/media/projects/", process.env.BASE_PATH))).toBe(
+        true,
+      );
+      expect(source.endsWith(".mp4")).toBe(true);
     }
   });
 

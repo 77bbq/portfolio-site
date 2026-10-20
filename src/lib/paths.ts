@@ -9,6 +9,26 @@ export function normalizeBase(base: string | undefined): string {
   return normalized ? `/${normalized}` : "";
 }
 
+export function normalizePagesBase(base: string | undefined): string {
+  const normalized = normalizeBase(base);
+  if (!normalized) {
+    return "";
+  }
+
+  const segments = normalized.slice(1).split("/");
+  const isSafe = segments.every(
+    (segment) =>
+      segment !== "." &&
+      segment !== ".." &&
+      /^[A-Za-z0-9._~-]+$/.test(segment),
+  );
+  if (!isSafe) {
+    throw new Error("BASE_PATH must contain only safe URL path segments");
+  }
+
+  return normalized;
+}
+
 export function withBasePath(pathname: string, base?: string): string {
   if (!pathname.startsWith("/") || pathname.startsWith("//")) {
     throw new Error(`Expected a site-root-relative path, received: ${pathname}`);

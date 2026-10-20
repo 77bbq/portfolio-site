@@ -68,10 +68,11 @@ describe("resolvePagesConfig", () => {
 
 describe("GitHub Pages workflow", () => {
   it("pins official actions, scopes least privilege, and separates deployment", async () => {
-    const workflow = await readFile(
-      path.resolve(".github", "workflows", "deploy.yml"),
-      "utf8",
-    );
+    const [workflow, packageSource] = await Promise.all([
+      readFile(path.resolve(".github", "workflows", "deploy.yml"), "utf8"),
+      readFile(path.resolve("package.json"), "utf8"),
+    ]);
+    const packageManager = JSON.parse(packageSource).packageManager as string;
 
     const pinnedActions = [
       ["actions/checkout", "v7"],
@@ -87,7 +88,12 @@ describe("GitHub Pages workflow", () => {
       );
     }
     expect(workflow).toMatch(/node-version:\s*["']?24["']?/);
-    expect(workflow).toMatch(/version:\s*["']?11["']?/);
+    const pnpmStep = workflow.slice(
+      workflow.indexOf("      - name: Install pnpm"),
+      workflow.indexOf("      - name: Install Node.js"),
+    );
+    expect(pnpmStep).not.toMatch(/\n\s+version:/);
+    expect(workflow).toContain(`package-manager: ${packageManager}`);
     expect(workflow).toContain("pnpm install --frozen-lockfile");
     expect(workflow).toMatch(/^permissions:\s*\{\}/m);
     expect(workflow).toMatch(/\n\s{2}build:/);

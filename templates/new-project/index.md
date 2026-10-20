@@ -16,7 +16,7 @@ links:
   demo: ""
   document: ""
 
-# 本地视频示例（取消下方注释后使用）：
+# 本地视频示例（使用时用下方结构替换上面的 media: []）：
 # media:
 #   - type: "video"
 #     src: "/media/projects/<slug>/demo.mp4"

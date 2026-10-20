@@ -347,6 +347,12 @@ video {
     box-shadow 180ms ease;
 }
 
+.project-card:focus-within {
+  border-color: var(--blue);
+  outline: 3px solid var(--blue);
+  outline-offset: 4px;
+}
+
 .project-card:hover {
   border-color: rgba(98, 189, 255, 0.42);
   box-shadow: 0 22px 54px rgba(0, 0, 0, 0.28);

@@ -74,14 +74,14 @@ function assertHashesEqual(before, after) {
   }
 }
 
-async function runBuild(repoRoot, basePath) {
+async function runPnpmScript(repoRoot, script, basePath) {
   const pnpmCli = process.env.npm_execpath;
   const command = pnpmCli ? process.execPath : process.platform === "win32" ? "cmd.exe" : "pnpm";
   const args = pnpmCli
-    ? [pnpmCli, "build"]
+    ? [pnpmCli, script]
     : process.platform === "win32"
-      ? ["/d", "/s", "/c", "pnpm build"]
-      : ["build"];
+      ? ["/d", "/s", "/c", `pnpm ${script}`]
+      : [script];
 
   await new Promise((resolve, reject) => {
     const child = spawn(command, args, {
@@ -100,7 +100,7 @@ async function runBuild(repoRoot, basePath) {
         resolve();
         return;
       }
-      reject(new Error(`Extensibility build failed (${signal ?? `exit ${code}`})`));
+      reject(new Error(`Extensibility ${script} failed (${signal ?? `exit ${code}`})`));
     });
   });
 }
@@ -200,7 +200,9 @@ export async function checkExtensibility({ repoRoot, basePath = "" }) {
     createdByThisRun = true;
     await writeFile(path.join(destination, "index.md"), projectMarkdown(slug), "utf8");
 
-    await runBuild(root, basePath);
+    await runPnpmScript(root, "test:unit", basePath);
+    await runPnpmScript(root, "build", basePath);
+    await runPnpmScript(root, "test:output", basePath);
 
     const homepagePath = path.join(distRoot, "index.html");
     const detailPath = path.join(distRoot, "projects", slug, "index.html");

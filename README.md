@@ -30,7 +30,7 @@ pnpm site:audit
 pnpm verify
 ```
 
-`pnpm extensibility:check` 会临时复制一个第八项目、构建并检查首页和详情页，随后只删除本次生成的临时项目。
+`pnpm extensibility:check` 会临时复制一个第八项目，在它存在时执行单元测试、构建和输出测试，并检查首页与详情页，随后只删除本次生成的临时项目。
 
 ## 修改姓名和联系方式
 
@@ -90,8 +90,8 @@ pnpm site:audit
 原始文件放在仓库外，只把面向网站的衍生文件写入本仓库。下列命令不会改写输入文件：
 
 ```bash
-pnpm media:image --input <source-image> --output src/assets/projects/<slug>/cover.webp
-pnpm media:poster --input <source-video> --output src/assets/projects/<slug>/poster.webp --seconds 2
+pnpm media:image --input <source-image> --output src/content/projects/<slug>/cover.webp
+pnpm media:poster --input <source-video> --output src/content/projects/<slug>/poster.webp --seconds 2
 pnpm media:video --input <source-video> --output public/media/projects/<slug>/demo.mp4 --max-width 1280
 ```
 

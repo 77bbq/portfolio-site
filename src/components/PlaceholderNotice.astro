@@ -1,0 +1,48 @@
+<aside class="placeholder-notice" data-placeholder-notice aria-label="项目内容状态">
+  <span aria-hidden="true">i</span>
+  <div>
+    <h2>内容整理中</h2>
+    <p>当前先展示项目影像和基本信息，详细说明将后续补充。</p>
+  </div>
+</aside>
+
+<style>
+  .placeholder-notice {
+    display: flex;
+    align-items: flex-start;
+    padding: clamp(22px, 4vw, 32px);
+    gap: 16px;
+    color: var(--muted);
+    border: 1px dashed var(--line-strong);
+    border-radius: 14px;
+    background: rgba(13, 21, 31, 0.48);
+  }
+
+  .placeholder-notice > span {
+    display: grid;
+    width: 34px;
+    height: 34px;
+    flex: 0 0 auto;
+    place-items: center;
+    color: var(--surface-0);
+    background: var(--blue-soft);
+    border-radius: 50%;
+    font-family: Georgia, serif;
+    font-weight: 800;
+  }
+
+  h2,
+  p {
+    margin: 0;
+  }
+
+  h2 {
+    color: var(--ink);
+    font-size: 1rem;
+  }
+
+  p {
+    margin-top: 6px;
+    font-size: 0.9rem;
+  }
+</style>

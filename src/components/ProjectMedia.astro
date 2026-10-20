@@ -1,0 +1,147 @@
+---
+import { Picture } from "astro:assets";
+
+import { withBasePath } from "../lib/paths";
+import { sortMedia, type ProjectMediaItem } from "../lib/projects";
+
+interface Props {
+  media: ProjectMediaItem[];
+  projectTitle: string;
+  cover?: ImageMetadata;
+  coverAlt?: string;
+}
+
+const { media, projectTitle, cover, coverAlt = "" } = Astro.props;
+const items: ProjectMediaItem[] =
+  media.length > 0
+    ? sortMedia(media)
+    : cover && coverAlt.trim()
+      ? [{ type: "image", src: cover, alt: coverAlt, order: 0 }]
+      : [];
+
+function responsiveWidths(image: ImageMetadata): number[] {
+  return [...new Set([480, 800, 1200].filter((width) => width <= image.width).concat(image.width))].sort(
+    (left, right) => left - right,
+  );
+}
+---
+
+<section class="project-media" data-project-media aria-label={`${projectTitle}媒体`}>
+  {
+    items.length > 0 ? (
+      <div class="media-list">
+        {items.map((item, index) => (
+          <figure class:list={["media-item", `media-item--${item.type}`]}>
+            {item.type === "image" ? (
+              <Picture
+                src={item.src}
+                formats={["avif", "webp"]}
+                fallbackFormat="webp"
+                widths={responsiveWidths(item.src)}
+                sizes="(min-width: 1040px) 900px, 100vw"
+                alt={item.alt}
+                loading={index === 0 ? "eager" : "lazy"}
+                fetchpriority={index === 0 ? "high" : "auto"}
+              />
+            ) : (
+              <video
+                src={withBasePath(item.src, import.meta.env.BASE_URL)}
+                poster={item.poster
+                  ? withBasePath(item.poster.src, import.meta.env.BASE_URL)
+                  : cover
+                    ? withBasePath(cover.src, import.meta.env.BASE_URL)
+                    : undefined}
+                aria-label={item.alt}
+                controls
+                playsinline
+                preload="none"
+              />
+            )}
+            {item.caption && <figcaption>{item.caption}</figcaption>}
+          </figure>
+        ))}
+      </div>
+    ) : (
+      <div class="media-fallback">
+        <svg
+          viewBox="0 0 640 400"
+          role="img"
+          aria-label={`${projectTitle}暂无封面`}
+          data-cover-fallback
+        >
+          <rect width="640" height="400" fill="currentColor" opacity="0.08" />
+          <path
+            d="M204 265V135l116-67 116 67v130l-116 67-116-67Zm116-38 50-29v-58l-50-29-50 29v58l50 29Z"
+            fill="none"
+            stroke="currentColor"
+            stroke-width="12"
+          />
+          <circle cx="320" cy="169" r="13" fill="currentColor" />
+        </svg>
+      </div>
+    )
+  }
+</section>
+
+<style>
+  .project-media {
+    min-width: 0;
+  }
+
+  .media-list {
+    display: grid;
+    gap: 20px;
+  }
+
+  .media-item {
+    min-width: 0;
+    overflow: hidden;
+    padding: 0;
+    margin: 0;
+    color: var(--blue-soft);
+    background: #070c12;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  .media-item picture,
+  .media-item picture img,
+  .media-item video {
+    width: 100%;
+  }
+
+  .media-item picture img {
+    max-height: min(76vh, 860px);
+    object-fit: contain;
+    background: #070c12;
+  }
+
+  .media-item video {
+    max-height: min(76vh, 820px);
+    background: #05080d;
+  }
+
+  figcaption {
+    padding: 12px 16px;
+    color: var(--muted);
+    border-top: 1px solid var(--line);
+    font-size: 0.82rem;
+  }
+
+  .media-fallback {
+    display: grid;
+    min-height: 320px;
+    place-items: center;
+    overflow: hidden;
+    color: var(--blue-soft);
+    background:
+      linear-gradient(145deg, rgba(98, 189, 255, 0.07), transparent 62%),
+      #0b121b;
+    border: 1px solid var(--line);
+    border-radius: 18px;
+  }
+
+  .media-fallback svg {
+    width: min(100%, 640px);
+  }
+</style>

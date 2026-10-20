@@ -1,0 +1,142 @@
+---
+interface Props {
+  summary?: string;
+  roles: string[];
+  tech: string[];
+  metrics: string[];
+}
+
+const { summary = "", roles, tech, metrics } = Astro.props;
+const visibleRoles = roles.filter((item) => item.trim());
+const visibleTech = tech.filter((item) => item.trim());
+const visibleMetrics = metrics.filter((item) => item.trim());
+const hasFacts = visibleRoles.length > 0 || visibleTech.length > 0 || visibleMetrics.length > 0;
+---
+
+{
+  summary && (
+    <section class="project-summary" data-project-summary aria-labelledby="project-summary-title">
+      <p class="fact-label" id="project-summary-title">
+        项目摘要
+      </p>
+      <p>{summary}</p>
+    </section>
+  )
+}
+
+{
+  hasFacts && (
+    <div class="facts-grid">
+      {visibleRoles.length > 0 && (
+        <section data-project-roles>
+          <h2>我的职责</h2>
+          <ul>
+            {visibleRoles.map((role) => (
+              <li>{role}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {visibleTech.length > 0 && (
+        <section data-project-tech>
+          <h2>核心技术</h2>
+          <ul class="tag-list">
+            {visibleTech.map((item) => (
+              <li>{item}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+      {visibleMetrics.length > 0 && (
+        <section data-project-metrics>
+          <h2>关键指标</h2>
+          <ul>
+            {visibleMetrics.map((metric) => (
+              <li>{metric}</li>
+            ))}
+          </ul>
+        </section>
+      )}
+    </div>
+  )
+}
+
+<style>
+  .project-summary {
+    display: grid;
+    padding: clamp(22px, 4vw, 34px);
+    gap: 10px;
+    border: 1px solid var(--line);
+    border-left: 3px solid var(--blue);
+    border-radius: 14px;
+    background: rgba(18, 29, 41, 0.72);
+  }
+
+  .project-summary p {
+    margin: 0;
+  }
+
+  .project-summary p:last-child {
+    max-width: 52rem;
+    color: var(--ink);
+    font-size: clamp(1.05rem, 2vw, 1.25rem);
+  }
+
+  .fact-label {
+    color: var(--blue);
+    font-size: 0.66rem;
+    font-weight: 750;
+    letter-spacing: 0.15em;
+  }
+
+  .facts-grid {
+    display: grid;
+    gap: 16px;
+  }
+
+  .facts-grid section {
+    min-width: 0;
+    padding: 24px;
+    border: 1px solid var(--line);
+    border-radius: 14px;
+    background: rgba(13, 21, 31, 0.76);
+  }
+
+  .facts-grid h2 {
+    margin: 0 0 14px;
+    font-size: 0.82rem;
+    letter-spacing: 0.05em;
+  }
+
+  .facts-grid ul {
+    padding: 0;
+    margin: 0;
+    color: var(--muted);
+    list-style: none;
+  }
+
+  .facts-grid li + li {
+    margin-top: 7px;
+  }
+
+  .tag-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+  }
+
+  .tag-list li {
+    padding: 5px 9px;
+    color: var(--blue-soft);
+    background: rgba(98, 189, 255, 0.07);
+    border: 1px solid rgba(98, 189, 255, 0.16);
+    border-radius: 999px;
+    font-size: 0.76rem;
+  }
+
+  @media (min-width: 760px) {
+    .facts-grid {
+      grid-template-columns: repeat(3, minmax(0, 1fr));
+    }
+  }
+</style>

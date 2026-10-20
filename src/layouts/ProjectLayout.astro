@@ -1,0 +1,180 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+import ConfiguredLink from "../components/ConfiguredLink.astro";
+import PlaceholderNotice from "../components/PlaceholderNotice.astro";
+import ProjectFacts from "../components/ProjectFacts.astro";
+import ProjectMedia from "../components/ProjectMedia.astro";
+import BaseLayout from "./BaseLayout.astro";
+import { stageBackHref, STAGE_LABELS, STATUS_LABELS } from "../lib/projects";
+
+interface Props {
+  project: CollectionEntry<"projects">;
+  showBody: boolean;
+}
+
+const { project, showBody } = Astro.props;
+const { data } = project;
+const backHref = stageBackHref(data.stage, import.meta.env.BASE_URL);
+const hasLinks = Object.values(data.links).some((value) => value.trim());
+---
+
+<BaseLayout title={data.title} description={data.summary || `${data.title}项目详情`}>
+  <article class="project-detail">
+    <header class="detail-hero">
+      <div class="shell detail-hero__inner">
+        <a class="back-link" href={backHref}>
+          <span aria-hidden="true">←</span>
+          返回{STAGE_LABELS[data.stage]}
+        </a>
+        <div class="detail-identity">
+          <p class="eyebrow">{data.stage === "graduate" ? "GRADUATE PROJECT" : "UNDERGRADUATE PROJECT"}</p>
+          <h1>{data.title}</h1>
+          <div class="detail-meta" aria-label="项目信息">
+            <span>{STAGE_LABELS[data.stage]}</span>
+            <span class:list={["status", `status--${data.status}`]}>{STATUS_LABELS[data.status]}</span>
+          </div>
+        </div>
+      </div>
+    </header>
+
+    <div class="shell detail-content">
+      <ProjectMedia
+        media={data.media}
+        projectTitle={data.title}
+        cover={data.cover}
+        coverAlt={data.coverAlt}
+      />
+
+      <ProjectFacts
+        summary={data.summary}
+        roles={data.roles}
+        tech={data.tech}
+        metrics={data.metrics}
+      />
+
+      {
+        hasLinks && (
+          <nav class="project-links" data-project-links aria-label="项目相关链接">
+            <ConfiguredLink href={data.links.repository} label="项目仓库" />
+            <ConfiguredLink href={data.links.demo} label="演示链接" />
+            <ConfiguredLink href={data.links.document} label="项目文档" />
+          </nav>
+        )
+      }
+
+      {
+        showBody ? (
+          <div class="project-body" data-project-body>
+            <slot />
+          </div>
+        ) : (
+          <PlaceholderNotice />
+        )
+      }
+
+      <a class="back-link back-link--bottom" href={backHref}>
+        <span aria-hidden="true">←</span>
+        返回{STAGE_LABELS[data.stage]}
+      </a>
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .detail-hero {
+    border-bottom: 1px solid var(--line);
+    background:
+      radial-gradient(circle at 82% 20%, rgba(98, 189, 255, 0.12), transparent 25rem),
+      rgba(13, 21, 31, 0.5);
+  }
+
+  .detail-hero__inner {
+    padding-block: clamp(42px, 7vw, 88px);
+  }
+
+  .back-link {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    gap: 8px;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .back-link:hover {
+    color: var(--blue-soft);
+  }
+
+  .detail-identity {
+    margin-top: clamp(34px, 6vw, 68px);
+  }
+
+  h1 {
+    max-width: 18ch;
+    margin: 0;
+    font-size: clamp(2.5rem, 7vw, 5.8rem);
+    letter-spacing: -0.055em;
+    line-height: 1.03;
+  }
+
+  .detail-meta {
+    display: flex;
+    align-items: center;
+    margin-top: 28px;
+    gap: 20px;
+    color: var(--muted);
+    font-size: 0.86rem;
+  }
+
+  .detail-content {
+    display: grid;
+    padding-block: clamp(48px, 8vw, 108px);
+    gap: clamp(28px, 5vw, 54px);
+  }
+
+  .project-links {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+
+  .project-links :global(a) {
+    display: inline-flex;
+    align-items: center;
+    min-height: 44px;
+    padding: 0 16px;
+    gap: 8px;
+    color: var(--blue-soft);
+    border: 1px solid var(--line-strong);
+    border-radius: 10px;
+    background: rgba(98, 189, 255, 0.05);
+  }
+
+  .project-links :global(a:hover) {
+    border-color: var(--blue);
+  }
+
+  .project-body {
+    max-width: 780px;
+    color: var(--muted);
+    font-size: 1rem;
+  }
+
+  .project-body :global(h2) {
+    margin: 2.5em 0 0.8em;
+    color: var(--ink);
+    font-size: clamp(1.45rem, 3vw, 2rem);
+  }
+
+  .project-body :global(p),
+  .project-body :global(li) {
+    max-width: 72ch;
+  }
+
+  .back-link--bottom {
+    justify-self: start;
+    padding-right: 12px;
+    border-top: 1px solid var(--line);
+  }
+</style>

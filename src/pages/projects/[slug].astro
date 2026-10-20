@@ -1,0 +1,31 @@
+---
+import type { CollectionEntry } from "astro:content";
+import { render } from "astro:content";
+
+import ProjectLayout from "../../layouts/ProjectLayout.astro";
+import { getProjects, shouldRenderProjectBody } from "../../lib/projects";
+
+export const prerender = true;
+
+export async function getStaticPaths() {
+  const projects = await getProjects();
+
+  return projects.map((project) => ({
+    params: { slug: project.data.slug },
+    props: { project },
+  }));
+}
+
+interface Props {
+  project: CollectionEntry<"projects">;
+}
+
+const { project } = Astro.props;
+const { Content } = await render(project);
+const bodySource = "body" in project && typeof project.body === "string" ? project.body : "";
+const showBody = shouldRenderProjectBody(project.data.contentStatus, bodySource);
+---
+
+<ProjectLayout project={project} showBody={showBody}>
+  <Content />
+</ProjectLayout>

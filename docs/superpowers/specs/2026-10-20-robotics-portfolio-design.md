@@ -103,7 +103,7 @@ tech: []
 metrics: []
 media:
   - type: "video"
-    src: "./demo.mp4"
+    src: "/media/projects/air-ground-coordination/demo.mp4"
     poster: "./video-poster.webp"
     alt: "空地协同项目演示视频"
     caption: ""
@@ -124,6 +124,8 @@ links:
 - 摘要、角色、技术、指标和外部链接均可为空；为空时对应界面完全隐藏。
 - `cover` 与 `coverAlt` 均可为空；有封面时必须同时提供替代文字，无封面时卡片使用站内统一的中性工程占位图。
 - `media` 为可选数组，支持本地 `image` 和 `video`。每项包含稳定顺序、替代文字和可选说明；视频还可包含海报。媒体按 `order` 升序排列，相同值以 `src` 升序作为次级排序。
+- 图片媒体使用与项目 Markdown 同目录的 Astro 图片引用；视频媒体使用以 `/media/` 开头的网站根相对公开路径，并在渲染时统一加上 GitHub Pages base。模板和 README 不使用相对于详情页的 `./demo.mp4` 路径，避免普通仓库部署时解析到错误目录。
+- `resumeUrl` 与项目链接允许 `https://` 外链、`mailto:` 邮件链接或以 `/` 开头的站内公开路径。站内路径统一加 GitHub Pages base；外链才使用新标签页和 `noopener noreferrer`。其他协议及不带 `/` 的相对路径在构建时拒绝。
 
 首版首页展示全部公开项目，不使用精选过滤。以后项目数量显著增加时再引入精选逻辑，避免首版存在未使用字段和两种相互冲突的展示规则。项目摘要为空时，卡片紧凑显示项目名、阶段和状态，不保留空白区域。
 

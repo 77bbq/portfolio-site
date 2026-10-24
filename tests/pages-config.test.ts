@@ -68,17 +68,16 @@ describe("resolvePagesConfig", () => {
 
 describe("GitHub Pages workflow", () => {
   it("pins official actions, scopes least privilege, and separates deployment", async () => {
-    const [workflow, packageSource] = await Promise.all([
-      readFile(path.resolve(".github", "workflows", "deploy.yml"), "utf8"),
-      readFile(path.resolve("package.json"), "utf8"),
-    ]);
-    const packageManager = JSON.parse(packageSource).packageManager as string;
+    const workflow = await readFile(
+      path.resolve(".github", "workflows", "deploy.yml"),
+      "utf8",
+    );
 
     const pinnedActions = [
       ["actions/checkout", "v7"],
       ["pnpm/action-setup", "v6"],
       ["actions/setup-node", "v7"],
-      ["withastro/action", "v6"],
+      ["actions/upload-pages-artifact", "v5"],
       ["actions/deploy-pages", "v5"],
     ];
     for (const [action, version] of pinnedActions) {
@@ -93,7 +92,6 @@ describe("GitHub Pages workflow", () => {
       workflow.indexOf("      - name: Install Node.js"),
     );
     expect(pnpmStep).not.toMatch(/\n\s+version:/);
-    expect(workflow).toContain(`package-manager: ${packageManager}`);
     expect(workflow).toContain("pnpm install --frozen-lockfile");
     expect(workflow).toMatch(/^permissions:\s*\{\}/m);
     expect(workflow).toMatch(/\n\s{2}build:/);
@@ -123,9 +121,7 @@ describe("GitHub Pages workflow", () => {
     expect(workflow).toContain("pnpm site:audit");
     expect(workflow).toContain("SITE_URL: ${{ steps.pages.outputs.site_url }}");
     expect(workflow).toContain("BASE_PATH: ${{ steps.pages.outputs.base_path }}");
-    expect(workflow).toContain(
-      'build-cmd: "pnpm build && pnpm test:output && pnpm site:audit"',
-    );
+    expect(workflow).toContain("pnpm build");
 
     const order = [
       "actions/checkout@",
@@ -135,7 +131,7 @@ describe("GitHub Pages workflow", () => {
       "pnpm test:unit",
       "node scripts/resolve-pages-config.mjs",
       "SITE_URL: https://example.test",
-      "withastro/action@",
+      "actions/upload-pages-artifact@",
     ].map((needle) => workflow.indexOf(needle));
     expect(order.every((index) => index >= 0)).toBe(true);
     expect([...order].sort((left, right) => left - right)).toEqual(order);

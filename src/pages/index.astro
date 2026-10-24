@@ -1,5 +1,6 @@
 ---
 import ProjectGrid from "../components/ProjectGrid.astro";
+import ConfiguredLink from "../components/ConfiguredLink.astro";
 import { siteIdentity } from "../data/site";
 import BaseLayout from "../layouts/BaseLayout.astro";
 import { getProjects, groupProjects, STAGE_LABELS } from "../lib/projects";
@@ -12,20 +13,18 @@ const groupedProjects = groupProjects(projects);
   <section class="hero" aria-labelledby="portfolio-title">
     <div class="shell hero-grid">
       <div class="hero-copy">
-        <p class="eyebrow">ROBOTICS / EMBEDDED SYSTEMS</p>
+        <p class="eyebrow">机器人与嵌入式 · 个人作品集</p>
         <h1 id="portfolio-title">{siteIdentity.name || siteIdentity.title}</h1>
         <p class="hero-direction">{siteIdentity.direction}</p>
-        {siteIdentity.intro && <p class="hero-intro">{siteIdentity.intro}</p>}
       </div>
 
-      <div class="hero-index" aria-label="项目数量">
-        <div>
-          <strong>{String(groupedProjects.graduate.length).padStart(2, "0")}</strong>
-          <span>研究生项目</span>
-        </div>
-        <div>
-          <strong>{String(groupedProjects.undergraduate.length).padStart(2, "0")}</strong>
-          <span>本科生项目</span>
+      <div class="hero-about">
+        <p class="hero-note">在做的事，和做过的事。</p>
+        {siteIdentity.intro && <p class="hero-intro">{siteIdentity.intro}</p>}
+        <div class="hero-actions">
+          <a class="text-link" href="#graduate-projects">浏览项目 <span aria-hidden="true">↓</span></a>
+          <ConfiguredLink href={siteIdentity.resumeUrl} label="个人简历" />
+          <ConfiguredLink href={siteIdentity.githubUrl} label="GitHub" />
         </div>
       </div>
     </div>

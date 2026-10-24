@@ -14,6 +14,7 @@ const { data } = project;
 const projectHref = withBasePath(`/projects/${data.slug}/`, import.meta.env.BASE_URL);
 const hasCover = hasUsableCover(data);
 const tech = data.tech.filter((item) => item.trim());
+const outcomes = data.metrics.filter((item) => item.trim());
 const cover = data.cover;
 const responsiveWidths = cover
   ? [...new Set([480, 800, 1200].filter((width) => width <= cover.width).concat(cover.width))].sort(
@@ -39,41 +40,45 @@ const isPriority = data.stage === "graduate" && data.order === 10;
             formats={["avif", "webp"]}
             fallbackFormat="webp"
             widths={responsiveWidths}
-            sizes="(min-width: 1080px) 31vw, (min-width: 680px) 48vw, 100vw"
+            sizes={data.stage === "graduate"
+              ? "(min-width: 1200px) 388px, (min-width: 760px) 36vw, calc(100vw - 40px)"
+              : "(min-width: 1200px) 520px, (min-width: 760px) 46vw, calc(100vw - 40px)"}
             alt={data.coverAlt}
             loading={isPriority ? "eager" : "lazy"}
             fetchpriority={isPriority ? "high" : "auto"}
           />
         ) : (
-          <svg
-            viewBox="0 0 640 400"
+          <div
+            class="project-cover-note"
             role="img"
-            aria-label={`${data.title}暂无封面`}
+            aria-label={`${data.title}项目记录，影像资料待补充`}
             data-cover-fallback
           >
-            <rect width="640" height="400" fill="currentColor" opacity="0.08" />
-            <path
-              d="M204 265V135l116-67 116 67v130l-116 67-116-67Zm116-38 50-29v-58l-50-29-50 29v58l50 29Z"
-              fill="none"
-              stroke="currentColor"
-              stroke-width="12"
-            />
-            <circle cx="320" cy="169" r="13" fill="currentColor" />
-          </svg>
+            <span>{data.stage === "graduate" ? "研究笔记" : "项目笔记"}</span>
+            <strong>{data.title}</strong>
+            <span class="project-cover-note__caption">影像资料待补充</span>
+          </div>
         )
       }
-      <span class="project-card__index" aria-hidden="true">
-        {String(data.order).padStart(2, "0")}
-      </span>
     </div>
 
     <div class="project-card__body">
       <div class="project-card__meta">
-        <span>{STAGE_LABELS[data.stage]}</span>
+        <span class="project-card__index sr-only" aria-hidden="true">
+          {String(data.order).padStart(2, "0")}
+        </span>
+        <span class="sr-only">{STAGE_LABELS[data.stage]}</span>
         <span class:list={["status", `status--${data.status}`]}>{STATUS_LABELS[data.status]}</span>
       </div>
       <h3>{data.title}</h3>
       {data.summary && <p data-project-summary>{data.summary}</p>}
+      {
+        outcomes.length > 0 && (
+          <ul class="project-outcomes" data-project-outcomes aria-label="项目成果">
+            {outcomes.map((outcome) => <li>{outcome}</li>)}
+          </ul>
+        )
+      }
       {
         tech.length > 0 && (
           <ul data-project-tech aria-label="项目技术">
@@ -84,7 +89,7 @@ const isPriority = data.stage === "graduate" && data.order === 10;
         )
       }
       <span class="project-card__cta">
-        查看项目 <span aria-hidden="true">→</span>
+        项目详情 <span aria-hidden="true">↗</span>
       </span>
     </div>
   </a>

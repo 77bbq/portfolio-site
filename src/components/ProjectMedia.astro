@@ -62,22 +62,10 @@ function responsiveWidths(image: ImageMetadata): number[] {
         ))}
       </div>
     ) : (
-      <div class="media-fallback">
-        <svg
-          viewBox="0 0 640 400"
-          role="img"
-          aria-label={`${projectTitle}暂无封面`}
-          data-cover-fallback
-        >
-          <rect width="640" height="400" fill="currentColor" opacity="0.08" />
-          <path
-            d="M204 265V135l116-67 116 67v130l-116 67-116-67Zm116-38 50-29v-58l-50-29-50 29v58l50 29Z"
-            fill="none"
-            stroke="currentColor"
-            stroke-width="12"
-          />
-          <circle cx="320" cy="169" r="13" fill="currentColor" />
-        </svg>
+      <div class="media-fallback" data-cover-fallback>
+        <span>项目记录</span>
+        <strong>{projectTitle}</strong>
+        <p>影像资料整理中</p>
       </div>
     )
   }
@@ -98,10 +86,10 @@ function responsiveWidths(image: ImageMetadata): number[] {
     overflow: hidden;
     padding: 0;
     margin: 0;
-    color: var(--blue-soft);
-    background: #070c12;
+    color: var(--accent);
+    background: var(--paper-raised);
     border: 1px solid var(--line);
-    border-radius: 18px;
+    border-radius: 0;
   }
 
   .media-item picture,
@@ -113,35 +101,52 @@ function responsiveWidths(image: ImageMetadata): number[] {
   .media-item picture img {
     max-height: min(76vh, 860px);
     object-fit: contain;
-    background: #070c12;
+    background: var(--paper-deep);
   }
 
   .media-item video {
     max-height: min(76vh, 820px);
-    background: #05080d;
+    background: #050505;
   }
 
   figcaption {
-    padding: 12px 16px;
+    padding: 11px 16px;
     color: var(--muted);
     border-top: 1px solid var(--line);
-    font-size: 0.82rem;
+    font-family: var(--font-mono);
+    font-size: 0.7rem;
   }
 
   .media-fallback {
-    display: grid;
-    min-height: 320px;
-    place-items: center;
-    overflow: hidden;
-    color: var(--blue-soft);
-    background:
-      linear-gradient(145deg, rgba(98, 189, 255, 0.07), transparent 62%),
-      #0b121b;
+    display: flex;
+    min-height: 220px;
+    padding: clamp(24px, 5vw, 48px);
+    flex-direction: column;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 16px;
+    color: var(--ink-soft);
+    background: var(--paper-deep);
     border: 1px solid var(--line);
-    border-radius: 18px;
+    border-radius: 0;
   }
 
-  .media-fallback svg {
-    width: min(100%, 640px);
+  .media-fallback span {
+    color: var(--accent);
+    font-size: 0.74rem;
+  }
+
+  .media-fallback strong {
+    max-width: 100%;
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 3vw, 2rem);
+    font-weight: 500;
+    overflow-wrap: anywhere;
+  }
+
+  .media-fallback p {
+    margin: 0;
+    color: var(--quiet);
+    font-size: 0.78rem;
   }
 </style>

@@ -158,6 +158,21 @@ describe("built homepage", () => {
     expect(html).not.toContain(".mp4");
   });
 
+  it("shows configured project outcomes without inventing results for unfinished work", () => {
+    const $ = load(html);
+
+    for (const { data } of projects.values()) {
+      const href = withBasePath(`/projects/${data.slug}/`, process.env.BASE_PATH);
+      const card = $(`a[href="${href}"]`).closest("[data-project-card]");
+      const outcomes = card.find("[data-project-outcomes]");
+
+      expect(outcomes, data.slug).toHaveLength(data.metrics.length > 0 ? 1 : 0);
+      expect(outcomes.find("li").toArray().map((item) => $(item).text().trim())).toEqual(
+        data.metrics,
+      );
+    }
+  });
+
   it("keeps tall or mechanically dense project covers fully visible", () => {
     const $ = load(html);
 
@@ -174,7 +189,7 @@ describe("built homepage", () => {
     const stylesheet = await builtStylesheet();
     const focusRule = stylesheet.match(/\.project-card:focus-within\{([^}]*)\}/)?.[1] ?? "";
 
-    expect(focusRule).toContain("outline:3px solid var(--blue)");
+    expect(focusRule).toContain("outline:3px solid var(--accent)");
     expect(focusRule).toContain("outline-offset:4px");
   });
 });

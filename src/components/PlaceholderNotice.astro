@@ -14,8 +14,8 @@
     gap: 16px;
     color: var(--muted);
     border: 1px dashed var(--line-strong);
-    border-radius: 14px;
-    background: rgba(13, 21, 31, 0.48);
+    border-radius: 0;
+    background: transparent;
   }
 
   .placeholder-notice > span {
@@ -24,11 +24,11 @@
     height: 34px;
     flex: 0 0 auto;
     place-items: center;
-    color: var(--surface-0);
-    background: var(--blue-soft);
-    border-radius: 50%;
-    font-family: Georgia, serif;
-    font-weight: 800;
+    color: var(--paper-raised);
+    background: var(--accent);
+    border-radius: 0;
+    font-family: var(--font-display);
+    font-weight: 600;
   }
 
   h2,
@@ -38,7 +38,9 @@
 
   h2 {
     color: var(--ink);
-    font-size: 1rem;
+    font-family: var(--font-display);
+    font-size: 1.05rem;
+    font-weight: 600;
   }
 
   p {

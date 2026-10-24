@@ -49,7 +49,7 @@ const hasFacts = visibleRoles.length > 0 || visibleTech.length > 0 || visibleMet
       )}
       {visibleMetrics.length > 0 && (
         <section data-project-metrics>
-          <h2>关键指标</h2>
+          <h2>项目成果</h2>
           <ul>
             {visibleMetrics.map((metric) => (
               <li>{metric}</li>
@@ -64,12 +64,12 @@ const hasFacts = visibleRoles.length > 0 || visibleTech.length > 0 || visibleMet
 <style>
   .project-summary {
     display: grid;
-    padding: clamp(22px, 4vw, 34px);
-    gap: 10px;
+    padding: clamp(20px, 3vw, 28px);
+    gap: 8px;
     border: 1px solid var(--line);
-    border-left: 3px solid var(--blue);
-    border-radius: 14px;
-    background: rgba(18, 29, 41, 0.72);
+    border-left: 3px solid var(--accent);
+    border-radius: 0;
+    background: var(--paper-raised);
   }
 
   .project-summary p {
@@ -79,59 +79,73 @@ const hasFacts = visibleRoles.length > 0 || visibleTech.length > 0 || visibleMet
   .project-summary p:last-child {
     max-width: 52rem;
     color: var(--ink);
-    font-size: clamp(1.05rem, 2vw, 1.25rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.05rem, 2vw, 1.22rem);
+    line-height: 1.75;
   }
 
   .fact-label {
-    color: var(--blue);
-    font-size: 0.66rem;
-    font-weight: 750;
-    letter-spacing: 0.15em;
+    color: var(--accent);
+    font-family: var(--font-mono);
+    font-size: 0.64rem;
+    font-weight: 500;
+    letter-spacing: 0.08em;
   }
 
   .facts-grid {
     display: grid;
-    gap: 16px;
+    gap: 24px;
   }
 
   .facts-grid section {
     min-width: 0;
-    padding: 24px;
-    border: 1px solid var(--line);
-    border-radius: 14px;
-    background: rgba(13, 21, 31, 0.76);
+    padding: 18px 0 0;
+    border-top: 1px solid var(--line-strong);
+    border-radius: 0;
+    background: transparent;
   }
 
   .facts-grid h2 {
-    margin: 0 0 14px;
-    font-size: 0.82rem;
-    letter-spacing: 0.05em;
+    margin: 0 0 12px;
+    color: var(--quiet);
+    font-family: var(--font-mono);
+    font-size: 0.68rem;
+    font-weight: 500;
+    letter-spacing: 0.06em;
   }
 
   .facts-grid ul {
     padding: 0;
     margin: 0;
-    color: var(--muted);
+    color: var(--ink-soft);
+    font-size: 0.92rem;
     list-style: none;
   }
 
   .facts-grid li + li {
-    margin-top: 7px;
+    margin-top: 6px;
   }
 
   .tag-list {
     display: flex;
     flex-wrap: wrap;
-    gap: 8px;
+    gap: 0;
+    color: var(--muted);
+    font-family: var(--font-mono);
+    font-size: 0.74rem;
   }
 
   .tag-list li {
-    padding: 5px 9px;
-    color: var(--blue-soft);
-    background: rgba(98, 189, 255, 0.07);
-    border: 1px solid rgba(98, 189, 255, 0.16);
-    border-radius: 999px;
-    font-size: 0.76rem;
+    padding: 0;
+    color: inherit;
+    background: none;
+    border: 0;
+    border-radius: 0;
+  }
+
+  .tag-list li + li::before {
+    color: var(--line-strong);
+    content: " / ";
   }
 
   @media (min-width: 760px) {

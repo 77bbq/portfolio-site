@@ -28,7 +28,7 @@ const hasLinks = Object.values(data.links).some((value) => value.trim());
           返回{STAGE_LABELS[data.stage]}
         </a>
         <div class="detail-identity">
-          <p class="eyebrow">{data.stage === "graduate" ? "GRADUATE PROJECT" : "UNDERGRADUATE PROJECT"}</p>
+          <p class="eyebrow">{data.stage === "graduate" ? "研究生项目档案" : "本科生项目档案"}</p>
           <h1>{data.title}</h1>
           <div class="detail-meta" aria-label="项目信息">
             <span>{STAGE_LABELS[data.stage]}</span>
@@ -39,18 +39,18 @@ const hasLinks = Object.values(data.links).some((value) => value.trim());
     </header>
 
     <div class="shell detail-content">
-      <ProjectMedia
-        media={data.media}
-        projectTitle={data.title}
-        cover={data.cover}
-        coverAlt={data.coverAlt}
-      />
-
       <ProjectFacts
         summary={data.summary}
         roles={data.roles}
         tech={data.tech}
         metrics={data.metrics}
+      />
+
+      <ProjectMedia
+        media={data.media}
+        projectTitle={data.title}
+        cover={data.cover}
+        coverAlt={data.coverAlt}
       />
 
       {
@@ -83,14 +83,12 @@ const hasLinks = Object.values(data.links).some((value) => value.trim());
 
 <style>
   .detail-hero {
-    border-bottom: 1px solid var(--line);
-    background:
-      radial-gradient(circle at 82% 20%, rgba(98, 189, 255, 0.12), transparent 25rem),
-      rgba(13, 21, 31, 0.5);
+    border-bottom: 1px solid var(--line-strong);
+    background: var(--paper-deep);
   }
 
   .detail-hero__inner {
-    padding-block: clamp(42px, 7vw, 88px);
+    padding-block: 28px 44px;
   }
 
   .back-link {
@@ -99,72 +97,93 @@ const hasLinks = Object.values(data.links).some((value) => value.trim());
     min-height: 44px;
     gap: 8px;
     color: var(--muted);
-    font-size: 0.86rem;
+    font-size: 0.84rem;
   }
 
   .back-link:hover {
-    color: var(--blue-soft);
+    color: var(--accent);
+    text-decoration: underline;
+    text-underline-offset: 4px;
   }
 
   .detail-identity {
-    margin-top: clamp(34px, 6vw, 68px);
+    margin-top: 28px;
   }
 
   h1 {
     max-width: 18ch;
     margin: 0;
-    font-size: clamp(2.5rem, 7vw, 5.8rem);
-    letter-spacing: -0.055em;
-    line-height: 1.03;
+    font-family: var(--font-display);
+    font-size: clamp(2.1rem, 5vw, 3.75rem);
+    font-weight: 500;
+    letter-spacing: -0.03em;
+    line-height: 1.3;
+    overflow-wrap: anywhere;
   }
 
   .detail-meta {
     display: flex;
     align-items: center;
-    margin-top: 28px;
-    gap: 20px;
+    margin-top: 26px;
+    gap: 18px;
     color: var(--muted);
-    font-size: 0.86rem;
+    font-family: var(--font-mono);
+    font-size: 0.72rem;
+  }
+
+  .detail-meta .status {
+    color: var(--quiet);
+  }
+
+  .detail-meta .status--ongoing {
+    color: var(--accent);
   }
 
   .detail-content {
     display: grid;
-    padding-block: clamp(48px, 8vw, 108px);
-    gap: clamp(28px, 5vw, 54px);
+    padding-block: clamp(32px, 5vw, 58px);
+    gap: clamp(28px, 4vw, 42px);
   }
 
   .project-links {
     display: flex;
     flex-wrap: wrap;
-    gap: 10px;
+    gap: 18px;
   }
 
   .project-links :global(a) {
     display: inline-flex;
     align-items: center;
-    min-height: 44px;
-    padding: 0 16px;
-    gap: 8px;
-    color: var(--blue-soft);
-    border: 1px solid var(--line-strong);
-    border-radius: 10px;
-    background: rgba(98, 189, 255, 0.05);
+    min-height: 40px;
+    padding: 0 0 3px;
+    gap: 6px;
+    color: var(--accent);
+    border-bottom: 1px solid var(--line-strong);
+    font-size: 0.84rem;
   }
 
   .project-links :global(a:hover) {
-    border-color: var(--blue);
+    border-color: var(--accent);
   }
 
   .project-body {
-    max-width: 780px;
-    color: var(--muted);
+    max-width: 760px;
+    color: var(--ink-soft);
     font-size: 1rem;
+    line-height: 1.9;
   }
 
   .project-body :global(h2) {
-    margin: 2.5em 0 0.8em;
+    margin: 2.4em 0 0.7em;
     color: var(--ink);
-    font-size: clamp(1.45rem, 3vw, 2rem);
+    font-family: var(--font-display);
+    font-size: clamp(1.4rem, 2.6vw, 1.85rem);
+    font-weight: 600;
+    letter-spacing: -0.015em;
+  }
+
+  .project-body :global(h2:first-child) {
+    margin-top: 0;
   }
 
   .project-body :global(p),

@@ -54,17 +54,20 @@ jobs:
           pnpm test:output
           pnpm site:audit
 
-      - name: Build and upload production Pages artifact
-        id: astro
-        uses: withastro/action@3eafd002e65cc31b4f0eae0bb05450d521562247 # v6
+      - name: Build production Pages artifact
         env:
           SITE_URL: ${{ steps.pages.outputs.site_url }}
           BASE_PATH: ${{ steps.pages.outputs.base_path }}
+        run: |
+          pnpm build
+          pnpm test:output
+          pnpm site:audit
+
+      - name: Upload production Pages artifact
+        uses: actions/upload-pages-artifact@fc324d3547104276b827a68afc52ff2a11cc49c9 # v5
         with:
-          node-version: 24
-          package-manager: pnpm@11.25.0
-          build-cmd: "pnpm build && pnpm test:output && pnpm site:audit"
-          out-dir: dist
+          path: dist
+          include-hidden-files: true
 
   deploy:
     needs: build

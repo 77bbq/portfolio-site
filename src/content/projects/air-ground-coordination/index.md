@@ -5,7 +5,7 @@ stage: "graduate"
 status: "ongoing"
 order: 10
 contentStatus: "placeholder"
-summary: ""
+summary: "研究生阶段正在开展的空地协同项目。"
 cover: "./cover.webp"
 coverAlt: "空地协同项目封面"
 roles: []

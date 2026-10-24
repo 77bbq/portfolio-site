@@ -4,31 +4,41 @@ slug: "smart-harvesting-car"
 stage: "undergraduate"
 status: "completed"
 order: 40
-contentStatus: "placeholder"
-summary: ""
+contentStatus: "ready"
+summary: "面向智慧农业赛项的智能采摘车项目。"
 cover: "./cover.webp"
 coverAlt: "智能采摘车实物照片"
 coverFit: "contain"
 roles: []
 tech: []
-metrics: []
-media: []
+metrics:
+  - "第二十六届中国机器人及人工智能大赛全国总决赛一等奖（智慧农业）"
+media:
+  - type: "image"
+    src: "./cover.webp"
+    alt: "智能采摘车实物照片"
+    caption: ""
+    order: 10
+  - type: "image"
+    src: "./gallery/certificate-craic.webp"
+    alt: "第二十六届中国机器人及人工智能大赛全国总决赛一等奖证书"
+    caption: "第二十六届中国机器人及人工智能大赛全国总决赛一等奖（智慧农业）"
+    order: 20
+  - type: "image"
+    src: "./gallery/信息安全国赛证书.png"
+    alt: "2024 年全国大学生信息安全与对抗技术竞赛全国总决赛二等奖证书"
+    caption: "2024 年全国大学生信息安全与对抗技术竞赛全国总决赛二等奖"
+    order: 30
 links:
   repository: ""
   demo: ""
-  document: ""
+  document: "/media/projects/smart-harvesting-car/documents/craic-certificate.pdf"
 ---
 
-<!-- 项目成果：在这里概括最终成果和价值。 -->
+## 我的职责
+1. 要负责英雄机器人的电控研发，包括舵轮底盘，云台，发射机构的控制；
+2. 搭建英雄机器人，哨兵机器人的硬件电路。
 
-<!-- 项目背景：在这里介绍使用场景和任务目标。 -->
+## 项目成果
 
-<!-- 我的职责：在这里写明个人负责的模块和贡献。 -->
-
-<!-- 系统设计：在这里描述整体架构和关键模块。 -->
-
-<!-- 核心技术与难点：在这里说明方案取舍和攻关过程。 -->
-
-<!-- 测试结果：在这里补充测试方法、指标和结果。 -->
-
-<!-- 项目复盘：在这里总结收获、局限和后续方向。 -->
+在获得了省一等奖。

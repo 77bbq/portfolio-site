@@ -4,30 +4,35 @@ slug: "electric-racing-car"
 stage: "undergraduate"
 status: "completed"
 order: 20
-contentStatus: "placeholder"
-summary: ""
+contentStatus: "ready"
+summary: "2024 年全国大学生电子设计竞赛湖北赛区的电赛车项目。"
 cover: "./cover.webp"
 coverAlt: "电赛车整车照片"
 roles: []
 tech: []
-metrics: []
-media: []
+metrics:
+  - "2024 年全国大学生电子设计竞赛（湖北赛区 TI 杯）一等奖"
+media:
+  - type: "image"
+    src: "./cover.webp"
+    alt: "电赛车整车照片"
+    caption: ""
+    order: 10
+  - type: "image"
+    src: "./gallery/certificate-diansai.webp"
+    alt: "2024 年全国大学生电子设计竞赛湖北赛区一等奖证书"
+    caption: "2024 年全国大学生电子设计竞赛（湖北赛区 TI 杯）一等奖"
+    order: 20
 links:
   repository: ""
   demo: ""
-  document: ""
+  document: "/media/projects/electric-racing-car/documents/electronic-design-certificate.pdf"
 ---
 
-<!-- 项目成果：在这里概括最终成果和价值。 -->
+## 我的职责
+1. 要负责英雄机器人的电控研发，包括舵轮底盘，云台，发射机构的控制；
+2. 搭建英雄机器人，哨兵机器人的硬件电路。
 
-<!-- 项目背景：在这里介绍比赛场景和任务目标。 -->
+## 项目成果
 
-<!-- 我的职责：在这里写明个人负责的模块和贡献。 -->
-
-<!-- 系统设计：在这里描述整体架构和关键模块。 -->
-
-<!-- 核心技术与难点：在这里说明方案取舍和攻关过程。 -->
-
-<!-- 测试结果：在这里补充测试方法、指标和结果。 -->
-
-<!-- 项目复盘：在这里总结收获、局限和后续方向。 -->
+在获得了省一等奖。
